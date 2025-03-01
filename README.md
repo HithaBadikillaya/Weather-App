@@ -1,6 +1,6 @@
 # WEATHER APP
 
-Weather Explorer is a modern web application that showcases real-time weather updates in a visually engaging way. The landing page features a rotating 3D model (using Three.js) partially visible at the bottom of the screen, along with an animated title and a call-to-action button to view detailed weather data.
+Weather Explorer is a modern web application that showcases real-time weather updates in a visually engaging way. The landing page features a rotating 3D model (using Three.js) along with an animated title and a call-to-action button to view detailed weather data.
 
 Tech Stack Used
 

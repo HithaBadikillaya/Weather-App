@@ -1,0 +1,191 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+body {
+  margin: 0;
+  
+  min-width: 320px;
+  min-height: 100vh;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+body {
+  font-size: 18px;
+}
+
+body,
+input,
+button,
+h2,
+h3,
+p,
+li {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.weather-container {
+  text-align: center;
+  padding: 20px;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.7s;
+}
+
+.search-container {
+  position: relative;
+}
+
+.mode-toggle,
+.unit-toggle {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-container input,
+.search-container button {
+  padding: 15px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  border: none;
+  margin: 5px;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  z-index: 10;
+  animation: slideDown 0.3s ease-out;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.suggestion-item:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.weather-info {
+  padding: 20px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  width: 600px;
+  animation: fadeIn 1s;
+  margin-top: 20px;
+}
+
+.travel-recommendations {
+  padding: 20px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+  width: 600px;
+  animation: fadeIn 1s;
+  margin-top: 20px;
+}
+
+.app-description {
+  margin: 10px 0 20px;
+  font-size: 1.1rem;
+  color: inherit;
+}
+
+.error-text {
+  color: #e53935;
+  animation: fadeIn 1s;
+  margin-top: 10px;
+}
+
+@keyframes moveWind {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Brada+Sans&display=swap');
+
+.heading-text {
+  font-size: 80px; 
+  font-family: 'Brada Sans', sans-serif;
+  color: #EAEAEA;
+  font-weight: bold;
+}

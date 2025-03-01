@@ -2,7 +2,7 @@
 
 Weather Explorer is a modern web application that showcases real-time weather updates in a visually engaging way. The landing page features a rotating 3D model (using Three.js) along with an animated title and a call-to-action button to view detailed weather data.
 
-Tech Stack Used
+# Tech Stack Used
 
 React – Core front-end library for building the user interface.
 React Router – Handles client-side navigation (e.g., from the landing page to the weather page).

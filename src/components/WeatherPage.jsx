@@ -10,13 +10,14 @@ const API_KEY = "1e498aca55074cfc008542053fefbc9b";
 const WeatherPage = () => {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
+  const [airQuality, setAirQuality] = useState(null);
+  const [weatherQuote, setWeatherQuote] = useState("");
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
   const [unit, setUnit] = useState("metric");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [moodMessage, setMoodMessage] = useState("");
-  const [surprise, setSurprise] = useState("");
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -29,17 +30,62 @@ const WeatherPage = () => {
     };
   }, []);
 
+  const getWeatherQuote = (condition) => {
+    const quotes = {
+      clear: [
+        "The sun shines not on us but in us.",
+        "Clear skies and bright minds!"
+      ],
+      clouds: [
+        "Even the clouds are beautiful in their own way.",
+        "Cloudy days are perfect for dreaming."
+      ],
+      rain: [
+        "Let the rain wash away your worries.",
+        "Rainy days remind us that growth needs water."
+      ],
+      snow: [
+        "Snowflakes are the butterflies of winter.",
+        "A snowy day is nature's way of saying 'pause and enjoy the magic.'"
+      ],
+      default: [
+        "Weather is nature's art, ever-changing and unique.",
+        "Embrace the weather, for it reflects the spirit of the day."
+      ]
+    };
+
+    const key = quotes[condition] ? condition : "default";
+    const selectedQuotes = quotes[key];
+    const randomIndex = Math.floor(Math.random() * selectedQuotes.length);
+    return selectedQuotes[randomIndex];
+  };
+
   const fetchWeather = async (selectedUnit = unit) => {
     if (!city.trim()) return;
     setError("");
     setWeather(null);
+    setAirQuality(null);
+    setWeatherQuote("");
     try {
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city.trim()}&appid=${API_KEY}&units=${selectedUnit}`
       );
       setWeather(response.data);
-      setMoodMessage("");
-      setSurprise("");
+
+      const condition = response.data.weather[0].main.toLowerCase();
+      setWeatherQuote(getWeatherQuote(condition));
+
+      if (response.data.coord) {
+        try {
+          const aqiResponse = await axios.get(
+            `https://api.openweathermap.org/data/2.5/air_pollution?lat=${response.data.coord.lat}&lon=${response.data.coord.lon}&appid=${API_KEY}`
+          );
+          setAirQuality(aqiResponse.data);
+        } catch (err) {
+          console.error("Error fetching air quality:", err);
+          setAirQuality(null);
+        }
+      }
     } catch (err) {
       console.error("Error fetching weather:", err);
       setError("City not found or API error. Please check your input.");
@@ -59,7 +105,7 @@ const WeatherPage = () => {
             (item) =>
               item.name &&
               item.country &&
-              /^[a-zA-Z\s]+$/.test(item.name)
+              /^[a-zA-Z\\s]+$/.test(item.name)
           )
           .map((item) => ({
             name: item.name,
@@ -141,8 +187,21 @@ const WeatherPage = () => {
     setMoodMessage(message);
   };
 
-  const handleSurprise = () => {
-    setSurprise("https://media.tenor.com/kGekz062mwgAAAAM/hugs-rickroll.gif");
+  const getAQIDescription = (aqi) => {
+    switch (aqi) {
+      case 1:
+        return "Good";
+      case 2:
+        return "Fair";
+      case 3:
+        return "Moderate";
+      case 4:
+        return "Poor";
+      case 5:
+        return "Very Poor";
+      default:
+        return "Unknown";
+    }
   };
 
   return (
@@ -155,6 +214,24 @@ const WeatherPage = () => {
         color: darkMode ? "#CCCCCC" : "#333333"
       }}
     >
+      <style>
+        {`
+          @keyframes slideIn {
+            from {
+              opacity: 0;
+              transform: translateX(-100%);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+          .slide-in {
+            animation: slideIn 0.8s ease-out forwards;
+          }
+        `}
+      </style>
+
       {!isOnline && (
         <div
           style={{
@@ -241,11 +318,28 @@ const WeatherPage = () => {
       {error && <p className="error-text">{error}</p>}
 
       {weather && (
-        <>
-          <div className="weather-info">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gridTemplateRows: "auto auto auto",
+            gridTemplateAreas: `
+              "weatherInfo airQuality"
+              "weatherInfo weatherWisdom"
+              "funZone funZone"
+            `,
+            gap: "20px",
+            marginTop: "20px"
+          }}
+        >
+          <div
+            className="bento-box weather-info slide-in"
+            style={{ gridArea: "weatherInfo" }}
+          >
             <h3>{weather.name}</h3>
             <p>
-              🌡 Temperature: {weather.main.temp}°{unit === "metric" ? "C" : "F"}
+              🌡 Temperature: {weather.main.temp}°
+              {unit === "metric" ? "C" : "F"}
             </p>
             <p>💧 Humidity: {weather.main.humidity}%</p>
             <p>
@@ -256,7 +350,8 @@ const WeatherPage = () => {
             <p>📈 Pressure: {weather.main.pressure} hPa</p>
             <p>👁 Visibility: {weather.visibility / 1000} km</p>
             <p>
-              🌡 Feels Like: {weather.main.feels_like}°{unit === "metric" ? "C" : "F"}
+              🌡 Feels Like: {weather.main.feels_like}°
+              {unit === "metric" ? "C" : "F"}
             </p>
             <p>🕒 Local Time: {formatLocalTime(weather.timezone)}</p>
             {weather.sys && (
@@ -274,10 +369,48 @@ const WeatherPage = () => {
             </button>
           </div>
 
-          <div className="weather-info" style={{ marginTop: "20px" }}>
+          {airQuality && airQuality.list && airQuality.list.length > 0 && (
+            <div
+              className="bento-box weather-info slide-in"
+              style={{ gridArea: "airQuality", height: "150px" }}
+            >
+              <h3>Air Quality</h3>
+              <p>
+                Air Quality Index: {airQuality.list[0].main.aqi} -{" "}
+                {getAQIDescription(airQuality.list[0].main.aqi)}
+              </p>
+            </div>
+          )}
+
+          {weatherQuote && (
+            <div
+              className="bento-box weather-info slide-in"
+              style={{ gridArea: "weatherWisdom", height: "150px" }}
+            >
+              <h3>Weather Wisdom</h3>
+              <p>{weatherQuote}</p>
+            </div>
+          )}
+
+          <div
+            className="bento-box weather-info slide-in"
+            style={{
+              gridArea: "funZone",
+              textAlign: "center",
+              gridColumn: "1 / -1",
+              width: "100%"
+            }}
+          >
             <h3>Weather Fun Zone</h3>
             <p>How does the weather make you feel?</p>
-            <div style={{ display: "flex", gap: "30px", marginTop: "10px" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "30px",
+                marginTop: "10px",
+                justifyContent: "center"
+              }}
+            >
               <button onClick={() => handleMoodSelection("happy")}>
                 <img
                   src="https://media.tenor.com/r-O2xbfTEWIAAAAm/bear-dance-no-background.webp"
@@ -309,23 +442,7 @@ const WeatherPage = () => {
             </div>
             {moodMessage && <p style={{ marginTop: "10px" }}>{moodMessage}</p>}
           </div>
-
-          <div className="weather-info" style={{ marginTop: "20px", textAlign: "center" }}>
-            <h3>Surprise!</h3>
-            <button
-              onClick={handleSurprise}
-              style={{ marginTop: "10px", padding: "8px 12px" }}
-            >
-              Click for a Surprise
-            </button>
-            {surprise && (
-              <div style={{ marginTop: "10px" }}>
-                <img src={surprise} alt="Surprise Gif" style={{ maxWidth: "100%" }} />
-                <p style={{ fontSize: "2em" }}>Have a nice day!</p>
-              </div>
-            )}
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

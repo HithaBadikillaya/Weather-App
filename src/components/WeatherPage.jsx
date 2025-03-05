@@ -14,7 +14,7 @@ const WeatherPage = () => {
   const [weatherQuote, setWeatherQuote] = useState("");
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [unit, setUnit] = useState("metric");
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [moodMessage, setMoodMessage] = useState("");
@@ -270,10 +270,10 @@ const WeatherPage = () => {
         style={{ height: "200px", marginBottom: "20px" }}
       />
 
-      <h2 style={{ animation: "fadeIn 1s" }}>Weather Checker</h2>
+      <h2 style={{ animation: "fadeIn 1s" }}>Hello mate!</h2>
 
       <DecryptedText
-        text="Welcome to Weather Checker! Enter your city name to get real-time weather information."
+        text="Welcome to Weather Explorer! Enter your city name to get real-time weather information."
         animateOn="view"
         revealDirection="center"
       />

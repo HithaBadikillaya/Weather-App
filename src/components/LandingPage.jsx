@@ -1,9 +1,10 @@
-import React, { useRef, useState, Suspense } from "react";
+import React, { useRef, useState, Suspense, lazy } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF, Preload, Center, Html, useProgress } from "@react-three/drei";
 import { useNavigate } from "react-router-dom";
 import * as THREE from "three";
-import SplitText from "./SplitText";
+
+const LazySplitText = lazy(() => import("./SplitText"));
 
 function Loader() {
   const { progress } = useProgress();
@@ -60,10 +61,9 @@ const Model = ({ onLoaded }) => {
 const LandingPage = () => {
   const navigate = useNavigate();
   const [modelLoaded, setModelLoaded] = useState(false);
-console.log(modelLoaded)
-  const handleAnimationComplete = () => {
-    console.log("All letters have animated!");
-  };
+  console.log(modelLoaded);
+
+ 
 
   return (
     <div style={{
@@ -84,17 +84,19 @@ console.log(modelLoaded)
         color: "white",
         zIndex: 2,
       }}>
-        <SplitText
-          text="Weather Explorer"
-          className="heading-text"
-          delay={150}
-          animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
-          animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
-          easing="easeOutCubic"
-          threshold={0.2}
-          rootMargin="-50px"
-          onLetterAnimationComplete={handleAnimationComplete}
-        />
+        <Suspense fallback={<div style={{ color: 'white', fontSize: '2rem' }}>Loading text...</div>}>
+          <LazySplitText
+            text="Weather Explorer"
+            className="heading-text"
+            delay={150}
+            animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
+            animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
+            easing="easeOutCubic"
+            threshold={0.2}
+            rootMargin="-50px"
+            
+          />
+        </Suspense>
         <p style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
           Discover real-time weather updates
         </p>
@@ -129,7 +131,7 @@ console.log(modelLoaded)
         position: "absolute",
         bottom: 0,
         width: "100%",
-        height: "60vh",
+        height: "70vh",
       }}>
         <Canvas
           gl={{ alpha: true }}

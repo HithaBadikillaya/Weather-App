@@ -27,7 +27,6 @@ const Model = ({ onLoaded }) => {
   const { scene } = useGLTF("/models/scene.gltf");
   const modelRef = useRef();
 
-  // Handle model loaded callback
   React.useEffect(() => {
     if (scene) {
       scene.traverse((child) => {
@@ -72,7 +71,6 @@ console.log(modelLoaded)
       width: "100vw",
       height: "100vh",
       overflow: "hidden",
-      backgroundImage: "url('/models/ppperspective.svg')",
       backgroundSize: "cover",
       backgroundPosition: "center",
     }}>

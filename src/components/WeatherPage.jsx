@@ -18,7 +18,6 @@ const WeatherPage = () => {
   const [moodMessage, setMoodMessage] = useState("");
   const [surprise, setSurprise] = useState("");
 
-  // Monitor online/offline status
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -30,7 +29,6 @@ const WeatherPage = () => {
     };
   }, []);
 
-  // Fetch weather data from API
   const fetchWeather = async (selectedUnit = unit) => {
     if (!city.trim()) return;
     setError("");
@@ -49,7 +47,6 @@ const WeatherPage = () => {
     }
   };
 
-  // Fetch city suggestions from geocoding API
   const fetchCitySuggestions = async (query) => {
     if (!query.trim()) return;
     try {
@@ -83,7 +80,6 @@ const WeatherPage = () => {
     }
   };
 
-  // Re-fetch weather if unit changes
   useEffect(() => {
     if (city.trim()) {
       fetchWeather(unit);
@@ -124,7 +120,6 @@ const WeatherPage = () => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  // Fun Feature: Mood Selection
   const handleMoodSelection = (mood) => {
     let message = "";
     switch (mood) {
@@ -146,7 +141,6 @@ const WeatherPage = () => {
     setMoodMessage(message);
   };
 
-  // NEW FEATURE: Surprise Button
   const handleSurprise = () => {
     setSurprise("https://media.tenor.com/kGekz062mwgAAAAM/hugs-rickroll.gif");
   };
@@ -280,7 +274,6 @@ const WeatherPage = () => {
             </button>
           </div>
 
-          {/* Weather Fun Zone */}
           <div className="weather-info" style={{ marginTop: "20px" }}>
             <h3>Weather Fun Zone</h3>
             <p>How does the weather make you feel?</p>
@@ -317,7 +310,6 @@ const WeatherPage = () => {
             {moodMessage && <p style={{ marginTop: "10px" }}>{moodMessage}</p>}
           </div>
 
-          {/* Surprise Feature */}
           <div className="weather-info" style={{ marginTop: "20px", textAlign: "center" }}>
             <h3>Surprise!</h3>
             <button
